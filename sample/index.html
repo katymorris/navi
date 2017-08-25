@@ -3,20 +3,28 @@
 <head>
 	<title>Navi Example</title>
 	<link rel="stylesheet" type="text/css" href="style.css">
+	<link rel="stylesheet" type="text/css" href="navi.css">
 </head>
 <body>
 	<header>
-		<nav>
-			<ul>
-				<li>Home</li>
-				<li>Blog</li>
-				<li>About</li>
-				<li>Contact</li>
-			</ul>
-		</nav>
+		<div class="container">
+			<p id="logo">Fake Webpage</p>
+			<nav id="navi">
+				<ul>
+					<li><a>Home</a></li>
+					<li><a>Blog</a></li>
+					<li><a>About</a></li>
+					<li><a>Contact</a></li>
+				</ul>
+			</nav>
+		<div class="push"></div>
+		</div><!--container-->
 	</header>
 	<div class="container">
 		<h1>Your Webpage</h1>
 	</div><!--container-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script type="text/javascript" src="navi.js"></script>
+	<script type="text/javascript" src="main.js"></script>
 </body>
 </html>

@@ -1,0 +1,24 @@
+#navi-menu-title {
+	display: none;
+}
+.nav-activated {
+	position: absolute;
+}
+.left-panel, .right-panel {
+	top: 0;
+}
+.left-panel {
+	left: 0;
+}
+.right-panel {
+	right: 0;
+}
+.nav-activated #navi-menu-title {
+	display: block;
+}
+.nav-activated ul {
+	position: relative;
+}
+	.nav-activated li {
+		display: block;
+	}
