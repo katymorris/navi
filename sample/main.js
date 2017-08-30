@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		color: "blue",
 		mobileWindowWidth: 980,
 		navWidth: "60%",
-		// panelPosition: "right"
+		// panelPosition: "left",
 	});
 });
 

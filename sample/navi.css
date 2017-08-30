@@ -3,6 +3,7 @@
 }
 .nav-activated {
 	position: absolute;
+	height: 100%;
 }
 .left-panel, .right-panel {
 	top: 0;
@@ -22,3 +23,61 @@
 	.nav-activated li {
 		display: block;
 	}
+/*---------- HAMBURGER ---------*/
+.navi-burger-container {
+	position: absolute;
+	display: none;
+	cursor: pointer;
+}
+.navi-burger-container > div {
+	width: 40px;
+	height: 3px;
+	background-color: black;
+	margin-top: 10px;
+}
+	.navi-burger-container > div:first-child {
+		margin-top: 0;
+	}
+	.navi-burger-container #line-1 {
+
+	}
+	.navi-burger-container #line-2 {
+		
+	}
+	.navi-burger-container #line-3 {
+		
+	}
+
+
+
+/*---------- MEDIA QUERIES ---------*/
+/*----------------------------------*/
+
+@media (max-width: 1200px) {
+  .container {
+    width: 980px;
+  }
+}
+
+@media (max-width: 980px) {
+	.container {
+		width: 768px;
+	}
+}
+
+@media (max-width: 768px) {
+  .container {
+    box-sizing: border-box;
+    width: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+@media (max-width: 767px) {
+
+}
+
+@media (max-width: 480px) {
+
+}

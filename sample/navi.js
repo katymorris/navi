@@ -14,13 +14,23 @@
   /*-----------------DEFAULT PROPS------------------*/
 
   //default properties
-  var userProps = {
-      navbarEl: null,
-      menuTitle: "Menu",
-      color: "gray",
-      mobileWindowWidth: 768,
-      navWidth: "50%",
-      panelPosition: "left"
+  var navProps = {
+      custom_props: {
+        menu_title: "Menu",
+        color: "gray",
+        mobileWindowWidth: 768,
+        navWidth: "50%",
+        panel_position: "right",
+      },
+      hamburger_props: {
+        provide_hamburger: true
+      },
+      internal_props: {
+        navbarEl: null,
+        hamburger_el: null,
+        raw_width: null,
+        nav_width_type: null
+      }
   }
 
   /*----------------GENERAL FUNCTIONS----------------*/
@@ -40,15 +50,21 @@
     //set custom properties
     var x;
     for (x in props) {
-      userProps[x] = props[x];
+      navProps.custom_props[x] = props[x];
     }
 
     //get user's navbar
-    userProps.navbarEl = document.getElementById("navi");
+    navProps.internal_props.navbarEl = document.getElementById("navi");
+
+    //sort out the user's input type for nav width for use and save data
+    var navWidthInt = parseInt(navProps.custom_props.navWidth);
+    var navWidthType = navProps.custom_props.navWidth.match(/\D/g,'').join("");
+    navProps.internal_props.raw_width = navWidthInt;
+    navProps.internal_props.nav_width_type = navWidthType;
+
+    buildHamburger();
 
     buildNavigationBase();
-
-
     checkForActivation();
   }
   window.goNavi = goNavi;
@@ -59,38 +75,72 @@
   function buildNavigationBase() {
 
     //create menu title
-    var navFirstChild = userProps.navbarEl.children[0];
-    var menuTitle = document.createElement('div');
-    menuTitle.setAttribute("id", "navi-menu-title");
-    menuTitle.innerHTML = userProps.menuTitle;
-    userProps.navbarEl.prepend(menuTitle);
-
-    //sort out the user's input for nav width for use
-    var navWidthInt = parseInt(userProps.navWidth) * -1;
-    var navWidthType = userProps.navWidth.match(/\D/g,'').join("");
-    var finalNavWidthVal = navWidthInt + navWidthType;
+    var navFirstChild = navProps.internal_props.navbarEl.children[0];
+    var menu_title = document.createElement('div');
+    menu_title.setAttribute("id", "navi-menu-title");
+    menu_title.innerHTML = navProps.custom_props.menu_title;
+    navProps.internal_props.navbarEl.prepend(menu_title);
 
     //set nav position
-    if (userProps.panelPosition == "right") {
-      userProps.navbarEl.className += " right-panel";
-      userProps.navbarEl.style.right = finalNavWidthVal
-    } else if (userProps.panelPosition == "left") {
-      userProps.navbarEl.className += " left-panel";
-      userProps.navbarEl.style.left = finalNavWidthVal
+    if (navProps.custom_props.panel_position == "right") {
+      navProps.internal_props.navbarEl.className += " right-panel";
+      navProps.internal_props.navbarEl.style.right = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
+    } else if (navProps.custom_props.panel_position == "left") {
+      navProps.internal_props.navbarEl.className += " left-panel";
+      navProps.internal_props.navbarEl.style.left = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
     }
+  }
 
-  setMobileAttributes();
+  function buildHamburger() {
+    if (navProps.hamburger_props.provide_hamburger == true) {
 
+      var burgerArr = [];
+
+      var burgerParent = document.createElement('div');
+      burgerParent.setAttribute("id", "navi-event-init");
+      burgerParent.className = "navi-burger-container";
+
+      var burgerChild1 = document.createElement('div');
+      burgerChild1.className = "line";
+      burgerChild1.setAttribute("id", "line-1");
+      burgerArr.push(burgerChild1);
+
+      var burgerChild2 = document.createElement('div');
+      burgerChild2.className = "line";
+      burgerChild2.setAttribute("id", "line-2");
+      burgerArr.push(burgerChild2);
+
+      var burgerChild3 = document.createElement('div');
+      burgerChild3.className = "line";
+      burgerChild3.setAttribute("id", "line-3");
+      burgerArr.push(burgerChild3);
+
+      for (i = 0; i < burgerArr.length; i++) { 
+          burgerParent.appendChild(burgerArr[i]);
+      }
+      //append the newly created hamburger
+      navProps.internal_props.navbarEl.parentNode.insertBefore(burgerParent, navProps.internal_props.navbarEl.nextSibling);
+      
+      //save the newly created hamburger
+      navProps.internal_props.hamburgerEl = burgerParent
+
+    } else {
+
+    }
   }
 
   //runs on resize
-  //set styles on mobile
-  function setMobileAttributes() {
-    if (window.outerWidth < userProps.mobileWindowWidth) {
-      userProps.navbarEl.style.width = userProps.navWidth;
-    } else {
-      userProps.navbarEl.removeAttribute('style');
-    }
+  //set styles when panel is activated
+  function setPanelOnlyAttributes() {
+    if (window.outerWidth < navProps.custom_props.mobileWindowWidth) {
+      navProps.internal_props.navbarEl.style.width = navProps.custom_props.navWidth;
+        //set nav position left/right
+      if (navProps.custom_props.panel_position == "right") {
+        navProps.internal_props.navbarEl.style.right = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+      } else if (navProps.custom_props.panel_position == "left") {
+        navProps.internal_props.navbarEl.style.left = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+      }
+    } 
   }
 
   /*-----------------RESIZE EVENTS------------------*/
@@ -98,14 +148,26 @@
   //check at end of preparation or resize if navigation should show
   function checkForActivation() {
     var windowWidth = window.outerWidth;
-    var activated = hasClass(userProps.navbarEl, 'nav-activated');
+    var activated = hasClass(navProps.internal_props.navbarEl, 'nav-activated');
 
-    if (windowWidth < userProps.mobileWindowWidth && activated == false) {
-      userProps.navbarEl.className += " nav-activated";
-    } else if (activated == true && windowWidth > userProps.mobileWindowWidth) {
-      userProps.navbarEl.className = userProps.navbarEl.className.replace(new RegExp('(?:^|\\s)'+ 'nav-activated' + '(?:\\s|$)'), ' ');
+    if (windowWidth < navProps.custom_props.mobileWindowWidth && activated == false) {
+      navProps.internal_props.navbarEl.className += " nav-activated";
+      navProps.internal_props.hamburgerEl.style.display = "block";
+      setPanelOnlyAttributes();
+    } else if (activated == true && windowWidth > navProps.custom_props.mobileWindowWidth) {
+      navProps.internal_props.navbarEl.className = navProps.internal_props.navbarEl.className.replace(new RegExp('(?:^|\\s)'+ 'nav-activated' + '(?:\\s|$)'), ' ');
+      navProps.internal_props.navbarEl.removeAttribute('style');
+      navProps.internal_props.hamburgerEl.removeAttribute('style');
     }
   }
+
+  /*-----------------EVENT LISTENERS------------------*/
+
+  document.querySelector('body').addEventListener("click", function(event){
+    if (event.target.id.toLowerCase() === 'navi-event-init') {
+      alert('hello')
+    }
+  });
 
 
   /*-----------------DOM LOADED------------------*/
