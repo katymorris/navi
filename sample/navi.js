@@ -29,7 +29,8 @@
         navbarEl: null,
         hamburger_el: null,
         raw_width: null,
-        nav_width_type: null
+        nav_width_type: null,
+        vendor_prefix: null,
       }
   }
 
@@ -38,6 +39,24 @@
   //check for class
   function hasClass(element, cls) {
       return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+  }
+
+
+  function GetVendorPrefix(arrayOfPrefixes) {
+    var tmp = document.createElement("div");
+    var result = "";
+
+    for (var i = 0; i < arrayOfPrefixes.length; ++i) {
+    if (typeof tmp.style[arrayOfPrefixes[i]] != 'undefined') {
+      result = arrayOfPrefixes[i];
+
+    } else {
+      debugger
+      result = null;
+    }
+
+    return result;
+    }
   }
 
   /*-----------------NAVI FUNCTIONS------------------*/
@@ -63,6 +82,8 @@
     navProps.internal_props.nav_width_type = navWidthType;
 
     buildHamburger();
+
+    navProps.internal_props.vendor_prefix = GetVendorPrefix(["transition", "msTransition", "MozTransition", "WebkitTransition", "OTransition"]);
 
     buildNavigationBase();
     checkForActivation();
@@ -98,7 +119,7 @@
 
       var burgerParent = document.createElement('div');
       burgerParent.setAttribute("id", "navi-event-init");
-      burgerParent.className = "navi-burger-container";
+      burgerParent.className = "navi-burger-container nav-closed";
 
       var burgerChild1 = document.createElement('div');
       burgerChild1.className = "line";
@@ -143,6 +164,19 @@
     } 
   }
 
+  /*--------------------EVENTS----------------------*/
+
+  function openNav() {
+    if (navProps.internal_props.vendor_prefix != null) {
+      debugger
+      navProps.internal_props.navbarEl.style[navProps.internal_props.vendor_prefix].style.transform = "translate(60px,0)";
+    }
+  }
+
+  function closeNav() {
+    
+  }
+
   /*-----------------RESIZE EVENTS------------------*/
 
   //check at end of preparation or resize if navigation should show
@@ -164,8 +198,15 @@
   /*-----------------EVENT LISTENERS------------------*/
 
   document.querySelector('body').addEventListener("click", function(event){
+
     if (event.target.id.toLowerCase() === 'navi-event-init') {
-      alert('hello')
+      var isOpen = hasClass(navProps.internal_props.navbarEl, 'nav-open');
+      if (isOpen == false) {
+        openNav();
+      } else if (isOpen == true) {
+        closeNav();
+      }
+
     }
   });
 
