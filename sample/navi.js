@@ -11,9 +11,9 @@
 
 (function (window) {
 
-  /*-----------------DEFAULT PROPS------------------*/
+    /*-----------------DEFAULT PROPS------------------*/
 
-  //default properties
+    //default properties
     var navProps = {
         custom_props: {
             menu_title: "Menu",
@@ -34,14 +34,14 @@
         }
     }
 
-  /*----------------GENERAL FUNCTIONS----------------*/
+    /*----------------GENERAL FUNCTIONS----------------*/
 
-  //check for class
+    //check for class
     function hasClass(elem, className) {
         return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
     }
 
-  //remove class
+    //remove class
     function removeClass(elem, className) {
         var newClass = ' ' + elem.className.replace( /[\t\r\n]/g, ' ') + ' ';
         if (hasClass(elem, className)) {
@@ -67,10 +67,10 @@
         }
     }
 
-  /*-----------------NAVI FUNCTIONS------------------*/
+    /*-----------------NAVI FUNCTIONS------------------*/
 
 
-  /*----MAIN PIPELINE----*/
+    /*----MAIN PIPELINE----*/
 
     function goNavi(props) {
 
@@ -97,9 +97,9 @@
     }
     window.goNavi = goNavi;
 
-  /*-----------------FACTORY------------------*/
+    /*-----------------FACTORY------------------*/
 
-//runs once on document creation
+    //runs once on document creation
     function buildNavigationBase() {
         //create menu title
         var navFirstChild = navProps.internal_props.navbarEl.children[0];
@@ -170,7 +170,7 @@
         } 
     }
 
-  /*--------------------EVENTS----------------------*/
+    /*--------------------EVENTS----------------------*/
 
     function openNav() {
         navProps.internal_props.navbarEl.className += " open-nav";
@@ -188,9 +188,9 @@
         }
     }
 
-  /*-----------------RESIZE EVENTS------------------*/
+    /*-----------------RESIZE EVENTS------------------*/
 
-  //check at end of preparation or resize if navigation should show
+    //check at end of preparation or resize if navigation should show
     function checkForActivation() {
         var windowWidth = window.outerWidth;
         var activated = hasClass(navProps.internal_props.navbarEl, 'nav-activated');
@@ -205,7 +205,7 @@
         }
     }
 
-  /*-----------------EVENT LISTENERS------------------*/
+    /*-----------------EVENT LISTENERS------------------*/
 
     document.querySelector('body').addEventListener("click", function(event){
 
@@ -226,15 +226,15 @@
     });
 
 
-  /*-----------------DOM LOADED------------------*/
-  /*---------------------------------------------*/
-  document.addEventListener("DOMContentLoaded", function(){
+    /*-----------------DOM LOADED------------------*/
+    /*---------------------------------------------*/
+    document.addEventListener("DOMContentLoaded", function(){
 
-  });
+    });
 
 
-  /*-----------------RESIZE------------------*/
-  /*-----------------------------------------*/
+    /*-----------------RESIZE------------------*/
+    /*-----------------------------------------*/
     window.onresize = function(event) {
         checkForActivation();
     };
