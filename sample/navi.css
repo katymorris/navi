@@ -1,3 +1,6 @@
+#navi {
+	transform: translate(0,0);
+}
 #navi-menu-title {
 	display: none;
 }

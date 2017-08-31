@@ -30,7 +30,7 @@
         hamburger_el: null,
         raw_width: null,
         nav_width_type: null,
-        vendor_prefix: null,
+        transform_prefix: null,
       }
   }
 
@@ -49,9 +49,7 @@
     for (var i = 0; i < arrayOfPrefixes.length; ++i) {
     if (typeof tmp.style[arrayOfPrefixes[i]] != 'undefined') {
       result = arrayOfPrefixes[i];
-
     } else {
-      debugger
       result = null;
     }
 
@@ -83,7 +81,7 @@
 
     buildHamburger();
 
-    navProps.internal_props.vendor_prefix = GetVendorPrefix(["transition", "msTransition", "MozTransition", "WebkitTransition", "OTransition"]);
+    navProps.internal_props.transform_prefix = GetVendorPrefix(["transform", "msTransform", "MozTransform", "WebkitTransform", "OTransform"]);
 
     buildNavigationBase();
     checkForActivation();
@@ -167,9 +165,10 @@
   /*--------------------EVENTS----------------------*/
 
   function openNav() {
-    if (navProps.internal_props.vendor_prefix != null) {
-      debugger
-      navProps.internal_props.navbarEl.style[navProps.internal_props.vendor_prefix].style.transform = "translate(60px,0)";
+    if (navProps.internal_props.transform_prefix != null) {
+      var prefix = navProps.internal_props.transform_prefix;
+      navProps.internal_props.navbarEl.style[prefix] = "translate(-60%,0)";
+
     }
   }
 
