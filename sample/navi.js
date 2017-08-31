@@ -37,10 +37,20 @@
   /*----------------GENERAL FUNCTIONS----------------*/
 
   //check for class
-  function hasClass(element, cls) {
-      return (' ' + element.className + ' ').indexOf(' ' + cls + ' ') > -1;
+  function hasClass(elem, className) {
+      return new RegExp(' ' + className + ' ').test(' ' + elem.className + ' ');
   }
 
+  //remove class
+  function removeClass(elem, className) {
+      var newClass = ' ' + elem.className.replace( /[\t\r\n]/g, ' ') + ' ';
+      if (hasClass(elem, className)) {
+          while (newClass.indexOf(' ' + className + ' ') >= 0 ) {
+              newClass = newClass.replace(' ' + className + ' ', ' ');
+          }
+          elem.className = newClass.replace(/^\s+|\s+$/g, '');
+      }
+  }
 
   function GetVendorPrefix(arrayOfPrefixes) {
     var tmp = document.createElement("div");
@@ -72,7 +82,6 @@
 
     //get user's navbar
     navProps.internal_props.navbarEl = document.getElementById("navi");
-
     //sort out the user's input type for nav width for use and save data
     var navWidthInt = parseInt(navProps.custom_props.navWidth);
     var navWidthType = navProps.custom_props.navWidth.match(/\D/g,'').join("");
@@ -165,15 +174,19 @@
   /*--------------------EVENTS----------------------*/
 
   function openNav() {
+    navProps.internal_props.navbarEl.className += " open-nav";
     if (navProps.internal_props.transform_prefix != null) {
       var prefix = navProps.internal_props.transform_prefix;
       navProps.internal_props.navbarEl.style[prefix] = "translate(-60%,0)";
-
     }
   }
 
   function closeNav() {
-    
+    removeClass(navProps.internal_props.navbarEl, 'open-nav');
+  if (navProps.internal_props.transform_prefix != null) {
+      var prefix = navProps.internal_props.transform_prefix;
+      navProps.internal_props.navbarEl.style[prefix] = "translate(60%,0)";
+    }
   }
 
   /*-----------------RESIZE EVENTS------------------*/
@@ -182,13 +195,12 @@
   function checkForActivation() {
     var windowWidth = window.outerWidth;
     var activated = hasClass(navProps.internal_props.navbarEl, 'nav-activated');
-
     if (windowWidth < navProps.custom_props.mobileWindowWidth && activated == false) {
       navProps.internal_props.navbarEl.className += " nav-activated";
       navProps.internal_props.hamburgerEl.style.display = "block";
       setPanelOnlyAttributes();
     } else if (activated == true && windowWidth > navProps.custom_props.mobileWindowWidth) {
-      navProps.internal_props.navbarEl.className = navProps.internal_props.navbarEl.className.replace(new RegExp('(?:^|\\s)'+ 'nav-activated' + '(?:\\s|$)'), ' ');
+      removeClass(navProps.internal_props.navbarEl, "nav-activated");
       navProps.internal_props.navbarEl.removeAttribute('style');
       navProps.internal_props.hamburgerEl.removeAttribute('style');
     }
@@ -199,7 +211,8 @@
   document.querySelector('body').addEventListener("click", function(event){
 
     if (event.target.id.toLowerCase() === 'navi-event-init') {
-      var isOpen = hasClass(navProps.internal_props.navbarEl, 'nav-open');
+      var isOpen = hasClass(navProps.internal_props.navbarEl, 'open-nav');
+      console.log(isOpen)
       if (isOpen == false) {
         openNav();
       } else if (isOpen == true) {
