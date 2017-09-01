@@ -1,5 +1,6 @@
 body {
 	text-align: center;
+	overflow-x: hidden;
 }
 ul {
 	padding: 0;
@@ -7,6 +8,12 @@ ul {
 .container {
 	width: 1170px;
 	margin: 0 auto;
+}
+#custom-nav-init {
+	height: 30px;
+	width: 40px;
+	background-color: gray;
+	float: left;
 }
 nav {
 	float: right;
@@ -23,6 +30,7 @@ nav {
 		}
 #logo {
 	float: left;
+	margin-left: 30px;
 }
 .push {
 	clear: both;

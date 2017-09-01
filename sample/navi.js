@@ -18,14 +18,23 @@
             mobileWindowWidth: 768,
             navWidth: "50%",
             panel_position: "right",
-            panel_ani_open_duration: "400ms"
+            panel_ani_open_duration: "400ms",
         },
         hamburger_props: {
-            provide_hamburger: true
+            provide_hamburger: true,
+            edge_distance_top: "20px",
+            edge_distance_left_right: "20px",
+            line_height: "2px",
+            line_width: "40px",
+            line_margin_top: "7px"
         },
         internal_props: {
             navbarEl: null,
             hamburger_el: null,
+            hamburger_lines: null,
+            line_1: null,
+            line_2: null,
+            line_3: null,
             raw_width: null,
             nav_width_type: null,
             transform_prefix: null,
@@ -77,6 +86,7 @@
         var x;
         for (x in props) {
             navProps.custom_props[x] = props[x];
+            navProps.hamburger_props[x] = props[x];
         }
 
         //get user's navbar
@@ -121,11 +131,16 @@
     function buildHamburger() {
         if (navProps.hamburger_props.provide_hamburger == true) {
 
+            //set up node
             var burgerArr = [];
 
             var burgerParent = document.createElement('div');
             burgerParent.setAttribute("id", "navi-event-init");
             burgerParent.className = "navi-burger-container nav-closed";
+
+            //style parent
+            burgerParent.style[navProps.custom_props.panel_position] = navProps.hamburger_props.edge_distance_left_right;
+            burgerParent.style.top = navProps.hamburger_props.edge_distance_top;
 
             var burgerChild1 = document.createElement('div');
             burgerChild1.className = "line";
@@ -150,9 +165,21 @@
           
             //save the newly created hamburger
             navProps.internal_props.hamburgerEl = burgerParent
+            navProps.internal_props.hamburger_lines = navProps.internal_props.hamburgerEl.childNodes
+            navProps.internal_props.line_1 = burgerChild1
+            navProps.internal_props.line_2 = burgerChild2
+            navProps.internal_props.line_3 = burgerChild3
 
+            //style children lines
+            for (i = 0; i < navProps.internal_props.hamburger_lines.length; i++) { 
+                navProps.internal_props.hamburger_lines[i].style.height = navProps.hamburger_props.line_height;
+                navProps.internal_props.hamburger_lines[i].style.width = navProps.hamburger_props.line_width;
+                if (i != 0) {
+                    navProps.internal_props.hamburger_lines[i].style.marginTop = navProps.hamburger_props.line_margin_top;  
+                }
+            }
         } else {
-
+            navProps.internal_props.hamburgerEl = document.getElementById("custom-nav-init")
         }
     }
 
@@ -164,13 +191,41 @@
             //set nav position left/right
             if (navProps.custom_props.panel_position == "right") {
                 navProps.internal_props.navbarEl.style.right = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+                navProps.internal_props.navbarEl.style.textAlign = "left";
             } else if (navProps.custom_props.panel_position == "left") {
                 navProps.internal_props.navbarEl.style.left = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+                navProps.internal_props.navbarEl.style.textAlign = "right";
             }
         } 
     }
 
     /*--------------------EVENTS----------------------*/
+
+    function aniOpen(transformPrefix, transitionPrefix) {
+        //line 1
+        var transitionProp1 = "transform " + "400ms" + " ease";
+
+        var transformProp1Move = "translateY(" + "10px" + ")";
+        var transformProp1Rotate = "rotate(45deg)";
+
+        //line 3
+        var transitionProp3 = "transform " + "400ms" + " ease";
+
+        var transformProp3Move = "translateY(" + "-10px" + ")";
+        var transformProp3Rotate = "rotate(-45deg)";
+
+        navProps.internal_props.line_1.style[transitionPrefix] = transitionProp1;
+        navProps.internal_props.line_1.style[transformPrefix] = transformProp1Move;
+
+        navProps.internal_props.line_2.style.opacity = "0";
+
+        navProps.internal_props.line_3.style[transitionPrefix] = transitionProp3;
+        navProps.internal_props.line_3.style[transformPrefix] = transformProp3Move;
+    }
+
+    function aniClose() {
+        
+    }
 
     function openNav() {
         navProps.internal_props.navbarEl.className += " open-nav";
@@ -182,9 +237,10 @@
             var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
             var transformProp = "translateX(" + (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type + ")";
             
-
             navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
             navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
+            
+            aniOpen(transformPrefix, transitionPrefix);
         }
     }
 
@@ -198,9 +254,10 @@
             var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
             var transformProp = "translateX(" + navProps.internal_props.raw_width + navProps.internal_props.nav_width_type + ")";
             
-
             navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
             navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
+            
+            aniClose();
         }
     }
 
@@ -227,7 +284,7 @@
         event.preventDefault();
         var elem = event.target;    
         while (elem != document) {
-            if (elem.id.toLowerCase() === 'navi-event-init') {
+            if (elem.id.toLowerCase() === navProps.internal_props.hamburgerEl.id) {
                 var isOpen = hasClass(navProps.internal_props.navbarEl, 'open-nav');
                 if (isOpen == false) {
                     openNav();

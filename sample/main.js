@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", function(){
 		mobileWindowWidth: 980,
 		navWidth: "60%",
 		// panelPosition: "left",
+		provide_hamburger: true,
 	});
 });
 
