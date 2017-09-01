@@ -1,9 +1,6 @@
 /*!
  * Navi - Navigation Panel
- * (c) 2017 Katy D M Morris
  * 
- *
- * http://katy-morris.com/navi
  * http://github.com/katy-morris/navi
  *
  * VERSION 1.0
@@ -194,7 +191,7 @@
     function closeNav() {
         removeClass(navProps.internal_props.navbarEl, 'open-nav');
         if (navProps.internal_props.transform_prefix != null) {
-            
+
             var transformPrefix = navProps.internal_props.transform_prefix;
             var transitionPrefix = navProps.internal_props.transition_prefix;
 
