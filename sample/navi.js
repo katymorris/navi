@@ -21,16 +21,18 @@
             mobileWindowWidth: 768,
             navWidth: "50%",
             panel_position: "right",
+            panel_ani_open_duration: "400ms"
         },
         hamburger_props: {
             provide_hamburger: true
         },
-            internal_props: {
+        internal_props: {
             navbarEl: null,
             hamburger_el: null,
             raw_width: null,
             nav_width_type: null,
             transform_prefix: null,
+            transition_prefix: null,
         }
     }
 
@@ -91,6 +93,7 @@
         buildHamburger();
 
         navProps.internal_props.transform_prefix = GetVendorPrefix(["transform", "msTransform", "MozTransform", "WebkitTransform", "OTransform"]);
+        navProps.internal_props.transition_prefix = GetVendorPrefix(["transition", "msTransition", "MozTransition", "WebkitTransition", "OTransition"]);
 
         buildNavigationBase();
         checkForActivation();
@@ -175,16 +178,32 @@
     function openNav() {
         navProps.internal_props.navbarEl.className += " open-nav";
         if (navProps.internal_props.transform_prefix != null) {
-            var prefix = navProps.internal_props.transform_prefix;
-            navProps.internal_props.navbarEl.style[prefix] = "translate(-60%,0)";
+
+            var transformPrefix = navProps.internal_props.transform_prefix;
+            var transitionPrefix = navProps.internal_props.transition_prefix;
+
+            var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
+            var transformProp = "translateX(" + (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type + ")";
+            
+
+            navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
+            navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
         }
     }
 
     function closeNav() {
         removeClass(navProps.internal_props.navbarEl, 'open-nav');
         if (navProps.internal_props.transform_prefix != null) {
-            var prefix = navProps.internal_props.transform_prefix;
-            navProps.internal_props.navbarEl.style[prefix] = "translate(60%,0)";
+            
+            var transformPrefix = navProps.internal_props.transform_prefix;
+            var transitionPrefix = navProps.internal_props.transition_prefix;
+
+            var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
+            var transformProp = "translateX(" + navProps.internal_props.raw_width + navProps.internal_props.nav_width_type + ")";
+            
+
+            navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
+            navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
         }
     }
 
@@ -208,11 +227,10 @@
     /*-----------------EVENT LISTENERS------------------*/
 
     document.querySelector('body').addEventListener("click", function(event){
-
-        var elem = event.target;
+        event.preventDefault();
+        var elem = event.target;    
         while (elem != document) {
-            event.preventDefault();
-            if (event.target.id.toLowerCase() === 'navi-event-init') {
+            if (elem.id.toLowerCase() === 'navi-event-init') {
                 var isOpen = hasClass(navProps.internal_props.navbarEl, 'open-nav');
                 if (isOpen == false) {
                     openNav();
