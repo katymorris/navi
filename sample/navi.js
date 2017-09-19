@@ -223,7 +223,7 @@
         navProps.internal_props.line_3.style[transformPrefix] = transformProp3Move;
     }
 
-    function aniClose() {
+    function aniClose(transformPrefix, transitionPrefix) {
         
     }
 
@@ -257,7 +257,7 @@
             navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
             navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
             
-            aniClose();
+            aniClose(transformPrefix, transitionPrefix);
         }
     }
 
