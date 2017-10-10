@@ -91,12 +91,15 @@
 
         //get user's navbar
         navProps.internal_props.navbar_el = document.getElementById("navi");
+
+        //add display styles
+        addMenuStyles()
+
         //sort out the user's input type for nav width for use and save data
         var navWidthInt = parseInt(navProps.custom_props.nav_width);
         var navWidthType = navProps.custom_props.nav_width.match(/\D/g,'').join("");
         navProps.internal_props.raw_width = navWidthInt;
-        navProps.internal_props.nav_width_type = navWidthType;
-        debugger
+
         buildHamburger();
 
         navProps.internal_props.transform_prefix = GetVendorPrefix(["transform", "msTransform", "MozTransform", "WebkitTransform", "OTransform"]);
@@ -106,6 +109,23 @@
         checkForActivation();
     }
     window.goNavi = goNavi;
+
+    //add display none class and style to menu. This avoids having to check the width of the browser on each resize.
+    function addMenuStyles() {
+        var css = '@media (max-width: ' + navProps.custom_props.mobile_window_width + 'px) { .navi-hide { display: none; } }';
+        head = document.querySelector("head");
+        style = document.createElement('style');
+        style.type = 'text/css';
+        if (style.styleSheet){
+          style.styleSheet.cssText = css;
+        } else {
+          style.appendChild(document.createTextNode(css));
+        }
+
+        head.appendChild(style);
+
+        navProps.internal_props.navbar_el.className += " navi-hide";
+    }
 
     /*-----------------INITIAL BUILDING------------------*/
 
@@ -129,8 +149,7 @@
     }
 
     function buildHamburger() {
-        if (navProps.hamburger_props.provide_hamburger == true) {
-
+        if (navProps.hamburger_props.provide_hamburger == false) {
             //set up node
             var burgerArr = [];
 
@@ -162,7 +181,6 @@
             }
             //append the newly created hamburger
             navProps.internal_props.navbar_el.parentNode.insertBefore(burgerParent, navProps.internal_props.navbar_el.nextSibling);
-            debugger
             //save the newly created hamburger
             navProps.internal_props.hamburger_el = burgerParent
             navProps.internal_props.hamburger_lines = navProps.internal_props.hamburger_el.childNodes
@@ -269,7 +287,7 @@
         var activated = hasClass(navProps.internal_props.navbar_el, 'nav-activated');
         if (windowWidth < navProps.custom_props.mobile_window_width && activated == false) {
             navProps.internal_props.navbar_el.className += " nav-activated";
-            debugger
+            
             navProps.internal_props.hamburger_el.style.display = "block";
             setPanelOnlyAttributes();
         } else if (activated == true && windowWidth > navProps.custom_props.mobile_window_width) {
