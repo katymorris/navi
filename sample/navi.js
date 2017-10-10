@@ -15,8 +15,8 @@
         custom_props: {
             menu_title: "Menu",
             color: "gray",
-            mobileWindowWidth: 768,
-            navWidth: "50%",
+            mobile_window_width: 768,
+            nav_width: "50%",
             panel_position: "right",
             panel_ani_open_duration: "400ms",
         },
@@ -29,7 +29,7 @@
             line_margin_top: "7px"
         },
         internal_props: {
-            navbarEl: null,
+            navbar_el: null,
             hamburger_el: null,
             hamburger_lines: null,
             line_1: null,
@@ -90,13 +90,13 @@
         }
 
         //get user's navbar
-        navProps.internal_props.navbarEl = document.getElementById("navi");
+        navProps.internal_props.navbar_el = document.getElementById("navi");
         //sort out the user's input type for nav width for use and save data
-        var navWidthInt = parseInt(navProps.custom_props.navWidth);
-        var navWidthType = navProps.custom_props.navWidth.match(/\D/g,'').join("");
+        var navWidthInt = parseInt(navProps.custom_props.nav_width);
+        var navWidthType = navProps.custom_props.nav_width.match(/\D/g,'').join("");
         navProps.internal_props.raw_width = navWidthInt;
         navProps.internal_props.nav_width_type = navWidthType;
-
+        debugger
         buildHamburger();
 
         navProps.internal_props.transform_prefix = GetVendorPrefix(["transform", "msTransform", "MozTransform", "WebkitTransform", "OTransform"]);
@@ -107,24 +107,24 @@
     }
     window.goNavi = goNavi;
 
-    /*-----------------FACTORY------------------*/
+    /*-----------------INITIAL BUILDING------------------*/
 
     //runs once on document creation
     function buildNavigationBase() {
         //create menu title
-        var navFirstChild = navProps.internal_props.navbarEl.children[0];
+        var navFirstChild = navProps.internal_props.navbar_el.children[0];
         var menu_title = document.createElement('div');
         menu_title.setAttribute("id", "navi-menu-title");
         menu_title.innerHTML = navProps.custom_props.menu_title;
-        navProps.internal_props.navbarEl.prepend(menu_title);
+        navProps.internal_props.navbar_el.prepend(menu_title);
 
         //set nav position
         if (navProps.custom_props.panel_position == "right") {
-            navProps.internal_props.navbarEl.className += " right-panel";
-            navProps.internal_props.navbarEl.style.right = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
+            navProps.internal_props.navbar_el.className += " right-panel";
+            navProps.internal_props.navbar_el.style.right = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
         } else if (navProps.custom_props.panel_position == "left") {
-            navProps.internal_props.navbarEl.className += " left-panel";
-            navProps.internal_props.navbarEl.style.left = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
+            navProps.internal_props.navbar_el.className += " left-panel";
+            navProps.internal_props.navbar_el.style.left = navProps.internal_props.raw_width + navProps.internal_props.nav_width_type;
         }
     }
 
@@ -161,11 +161,11 @@
                 burgerParent.appendChild(burgerArr[i]);
             }
             //append the newly created hamburger
-            navProps.internal_props.navbarEl.parentNode.insertBefore(burgerParent, navProps.internal_props.navbarEl.nextSibling);
-          
+            navProps.internal_props.navbar_el.parentNode.insertBefore(burgerParent, navProps.internal_props.navbar_el.nextSibling);
+            debugger
             //save the newly created hamburger
-            navProps.internal_props.hamburgerEl = burgerParent
-            navProps.internal_props.hamburger_lines = navProps.internal_props.hamburgerEl.childNodes
+            navProps.internal_props.hamburger_el = burgerParent
+            navProps.internal_props.hamburger_lines = navProps.internal_props.hamburger_el.childNodes
             navProps.internal_props.line_1 = burgerChild1
             navProps.internal_props.line_2 = burgerChild2
             navProps.internal_props.line_3 = burgerChild3
@@ -179,22 +179,22 @@
                 }
             }
         } else {
-            navProps.internal_props.hamburgerEl = document.getElementById("custom-nav-init")
+            navProps.internal_props.hamburger_el = document.getElementById("custom-nav-init")
         }
     }
 
     //runs on resize
     //set styles when panel is activated
     function setPanelOnlyAttributes() {
-        if (window.outerWidth < navProps.custom_props.mobileWindowWidth) {
-            navProps.internal_props.navbarEl.style.width = navProps.custom_props.navWidth;
+        if (window.outerWidth < navProps.custom_props.mobile_window_width) {
+            navProps.internal_props.navbar_el.style.width = navProps.custom_props.nav_width;
             //set nav position left/right
             if (navProps.custom_props.panel_position == "right") {
-                navProps.internal_props.navbarEl.style.right = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
-                navProps.internal_props.navbarEl.style.textAlign = "left";
+                navProps.internal_props.navbar_el.style.right = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+                navProps.internal_props.navbar_el.style.textAlign = "left";
             } else if (navProps.custom_props.panel_position == "left") {
-                navProps.internal_props.navbarEl.style.left = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
-                navProps.internal_props.navbarEl.style.textAlign = "right";
+                navProps.internal_props.navbar_el.style.left = (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type;
+                navProps.internal_props.navbar_el.style.textAlign = "right";
             }
         } 
     }
@@ -228,7 +228,7 @@
     }
 
     function openNav() {
-        navProps.internal_props.navbarEl.className += " open-nav";
+        navProps.internal_props.navbar_el.className += " open-nav";
         if (navProps.internal_props.transform_prefix != null) {
 
             var transformPrefix = navProps.internal_props.transform_prefix;
@@ -237,15 +237,15 @@
             var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
             var transformProp = "translateX(" + (navProps.internal_props.raw_width * -1) + navProps.internal_props.nav_width_type + ")";
             
-            navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
-            navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
+            navProps.internal_props.navbar_el.style[transitionPrefix] = transitionProp;
+            navProps.internal_props.navbar_el.style[transformPrefix] = transformProp;
             
             aniOpen(transformPrefix, transitionPrefix);
         }
     }
 
     function closeNav() {
-        removeClass(navProps.internal_props.navbarEl, 'open-nav');
+        removeClass(navProps.internal_props.navbar_el, 'open-nav');
         if (navProps.internal_props.transform_prefix != null) {
 
             var transformPrefix = navProps.internal_props.transform_prefix;
@@ -254,8 +254,8 @@
             var transitionProp = "transform " + navProps.custom_props.panel_ani_open_duration + " ease";
             var transformProp = "translateX(" + navProps.internal_props.raw_width + navProps.internal_props.nav_width_type + ")";
             
-            navProps.internal_props.navbarEl.style[transitionPrefix] = transitionProp;
-            navProps.internal_props.navbarEl.style[transformPrefix] = transformProp;
+            navProps.internal_props.navbar_el.style[transitionPrefix] = transitionProp;
+            navProps.internal_props.navbar_el.style[transformPrefix] = transformProp;
             
             aniClose(transformPrefix, transitionPrefix);
         }
@@ -266,15 +266,16 @@
     //check at end of preparation or resize if navigation should show
     function checkForActivation() {
         var windowWidth = window.outerWidth;
-        var activated = hasClass(navProps.internal_props.navbarEl, 'nav-activated');
-        if (windowWidth < navProps.custom_props.mobileWindowWidth && activated == false) {
-            navProps.internal_props.navbarEl.className += " nav-activated";
-            navProps.internal_props.hamburgerEl.style.display = "block";
+        var activated = hasClass(navProps.internal_props.navbar_el, 'nav-activated');
+        if (windowWidth < navProps.custom_props.mobile_window_width && activated == false) {
+            navProps.internal_props.navbar_el.className += " nav-activated";
+            debugger
+            navProps.internal_props.hamburger_el.style.display = "block";
             setPanelOnlyAttributes();
-        } else if (activated == true && windowWidth > navProps.custom_props.mobileWindowWidth) {
-            removeClass(navProps.internal_props.navbarEl, "nav-activated");
-            navProps.internal_props.navbarEl.removeAttribute('style');
-            navProps.internal_props.hamburgerEl.removeAttribute('style');
+        } else if (activated == true && windowWidth > navProps.custom_props.mobile_window_width) {
+            removeClass(navProps.internal_props.navbar_el, "nav-activated");
+            navProps.internal_props.navbar_el.removeAttribute('style');
+            navProps.internal_props.hamburger_el.removeAttribute('style');
         }
     }
 
@@ -284,8 +285,8 @@
         event.preventDefault();
         var elem = event.target;    
         while (elem != document) {
-            if (elem.id.toLowerCase() === navProps.internal_props.hamburgerEl.id) {
-                var isOpen = hasClass(navProps.internal_props.navbarEl, 'open-nav');
+            if (elem.id.toLowerCase() === navProps.internal_props.hamburger_el.id) {
+                var isOpen = hasClass(navProps.internal_props.navbar_el, 'open-nav');
                 if (isOpen == false) {
                     openNav();
                 } else if (isOpen == true) {
